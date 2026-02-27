@@ -84,11 +84,11 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
   if (active && payload && payload.length) {
     const data = payload[0]?.payload;
     const roas = data?.adSpend > 0 ? (data.revenue / data.adSpend).toFixed(2) : '0.00';
-    
+
     return (
       <div className="bg-card border border-border rounded-lg p-4 shadow-lg min-w-[180px]">
         <p className="text-sm font-medium text-foreground mb-3 border-b border-border pb-2">{label}</p>
-        {payload.map((entry: any, index: number) => (
+        {payload.map((entry, index: number) => (
           <p key={index} className="text-sm flex items-center justify-between gap-4 mb-1">
             <span className="flex items-center gap-2" style={{ color: entry.color }}>
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
@@ -114,10 +114,10 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
   return null;
 };
 
-const CustomLegend = ({ payload }: any) => {
+const CustomLegend = ({ payload }: { payload?: Array<{ color: string; value: string }> }) => {
   return (
     <div className="flex items-center justify-center gap-6 mt-4">
-      {payload?.map((entry: any, index: number) => (
+      {payload?.map((entry, index: number) => (
         <div key={index} className="flex items-center gap-2">
           <div 
             className="w-3 h-3 rounded-full" 

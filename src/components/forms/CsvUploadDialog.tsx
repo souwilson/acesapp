@@ -168,7 +168,7 @@ export function CsvUploadDialog({ open, onOpenChange }: CsvUploadDialogProps) {
 
       // Create ad_performance record
       const adRecord = await createAdPerformance.mutateAsync({
-        platform: platform as any,
+        platform: platform as 'meta' | 'google' | 'twitter' | 'tiktok' | 'other',
         date,
         investment: totalInvestment,
         revenue: totalRevenue,
@@ -216,8 +216,9 @@ export function CsvUploadDialog({ open, onOpenChange }: CsvUploadDialogProps) {
 
       toast({ title: `${parsedData.campaigns.length} campanhas importadas com sucesso!` });
       handleClose();
-    } catch (err: any) {
-      toast({ title: 'Erro ao importar', description: err.message, variant: 'destructive' });
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
+      toast({ title: 'Erro ao importar', description: errorMessage, variant: 'destructive' });
     } finally {
       setIsSubmitting(false);
     }

@@ -34,7 +34,7 @@ const columns: { key: SortKey; label: string; type: 'text' | 'number' | 'currenc
   { key: 'rejected_sales', label: 'Recusadas', type: 'number' },
 ];
 
-function getNumericValue(val: any): number {
+function getNumericValue(val: unknown): number {
   if (val == null || val === '' || val === '-') return 0;
   if (typeof val === 'number') return val;
   const cleaned = String(val).replace(/[R$%\s]/g, '').replace(/\./g, '').replace(',', '.');

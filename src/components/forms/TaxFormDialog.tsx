@@ -126,8 +126,9 @@ export function TaxFormDialog({ open, onOpenChange, tax }: TaxFormDialogProps) {
         setReceiptUrls((prev) => [...prev, data.publicUrl]);
       }
       toast({ title: 'PDF(s) anexado(s) com sucesso!' });
-    } catch (error: any) {
-      toast({ title: 'Erro ao enviar arquivo', description: error.message, variant: 'destructive' });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      toast({ title: 'Erro ao enviar arquivo', description: errorMessage, variant: 'destructive' });
     } finally {
       setUploading(false);
       // Reset input so same file can be selected again
