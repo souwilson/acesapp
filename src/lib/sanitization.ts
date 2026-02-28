@@ -14,9 +14,10 @@ export const CSV_CONFIG = {
 };
 
 // SQL dangerous keywords that could indicate injection
+// NOTE: Only word keywords (no special chars that need escaping)
 const SQL_DANGEROUS_KEYWORDS = [
   'DROP', 'DELETE', 'INSERT', 'UPDATE', 'ALTER', 'CREATE', 'EXEC',
-  'EXECUTE', 'SELECT', 'UNION', 'DECLARE', '--', ';', '/*', '*/'
+  'EXECUTE', 'SELECT', 'UNION', 'DECLARE'
 ];
 
 // HTML dangerous characters that could indicate XSS
@@ -75,6 +76,9 @@ function sanitizeStringField(value: string): string {
     sanitized = sanitized.replace(regex, '');
   }
 
+  // Remove SQL comment indicators
+  sanitized = sanitized.replace(/--/g, '').replace(/\/\*/g, '').replace(/\*\//g, '');
+
   // Escape single/double quotes for SQL safety
   sanitized = sanitized
     .replace(/'/g, "''")  // Escape single quotes
@@ -99,8 +103,19 @@ function sanitizeNumericField(value: string): number {
   // Remove common currency symbols and formatting
   let cleaned = value
     .replace(/[R$£€¥]/g, '')  // Remove currency symbols
-    .replace(/[.,]/g, match => match === ',' ? '.' : '') // Handle comma as decimal separator
     .replace(/\s/g, ''); // Remove whitespace
+
+  // Handle Brazilian format (1.234,56 → 1234.56)
+  // Check if comma exists and is likely a decimal separator
+  if (cleaned.includes(',')) {
+    // Replace comma with dot
+    cleaned = cleaned.replace(',', '.');
+    // Remove any remaining dots (thousands separator)
+    cleaned = cleaned.replace(/\./g, (match, offset) => {
+      // Keep the last dot (decimal separator)
+      return offset === cleaned.lastIndexOf('.') ? '.' : '';
+    });
+  }
 
   const num = parseFloat(cleaned);
 
@@ -134,9 +149,39 @@ function sanitizeDateField(value: string): string | null {
     return null;
   }
 
-  // Try to parse as date to ensure it's valid
-  const date = new Date(value);
-  if (isNaN(date.getTime())) {
+  let day: number, month: number, year: number;
+
+  // Parse different date formats
+  if (value.includes('-') && value.startsWith('20')) {
+    // YYYY-MM-DD format
+    const parts = value.split('-');
+    year = parseInt(parts[0]);
+    month = parseInt(parts[1]);
+    day = parseInt(parts[2]);
+  } else if (value.includes('/')) {
+    // DD/MM/YYYY format
+    const parts = value.split('/');
+    day = parseInt(parts[0]);
+    month = parseInt(parts[1]);
+    year = parseInt(parts[2]);
+  } else {
+    // DD-MM-YYYY format
+    const parts = value.split('-');
+    day = parseInt(parts[0]);
+    month = parseInt(parts[1]);
+    year = parseInt(parts[2]);
+  }
+
+  // Validate month and day ranges
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    return null;
+  }
+
+  const date = new Date(year, month - 1, day);
+
+  // Validate that the date actually represents the intended date
+  // (JavaScript will adjust invalid dates like Feb 30)
+  if (date.getDate() !== day || date.getMonth() !== month - 1 || date.getFullYear() !== year) {
     return null;
   }
 
@@ -231,11 +276,14 @@ export function detectDuplicateRows(rows: Record<string, unknown>[]): { hasDupli
  */
 export function containsSQLInjectionPatterns(value: string): boolean {
   const injectionPatterns = [
-    /('|")?\s*(OR|AND)\s*('|")?\s*1\s*=\s*1/gi, // OR 1=1
-    /(\bUNION\b.*\bSELECT\b)/gi, // UNION SELECT
-    /(\bDROP\b.*\bTABLE\b)/gi, // DROP TABLE
-    /(;\s*DELETE\b)/gi, // ; DELETE
-    /(-{2}|\/\*)/gi, // SQL comments
+    /\bOR\b\s+(1\s*=\s*1|true\b)/gi, // OR 1=1 or OR true
+    /(\s+OR\s+|'.*OR\s+)/gi, // OR with quotes
+    /\bUNION\b/gi, // UNION keyword
+    /\bSELECT\b/gi, // SELECT keyword
+    /\bDROP\b/gi, // DROP keyword
+    /-{2}/g, // SQL comments --
+    /\/\*/g, // Block comments /*
+    /;\s*(DROP|DELETE|UPDATE|INSERT)/gi, // Statement terminators with commands
   ];
 
   return injectionPatterns.some(pattern => pattern.test(value));
