@@ -22,6 +22,7 @@ import { useBulkInsertAdCampaigns } from '@/hooks/useAdCampaigns';
 import { useCreateAuditLog } from '@/hooks/useAuditLog';
 import { toast } from '@/hooks/use-toast';
 import { DateInput } from '@/components/ui/DateInput';
+import { validateCSVFile, sanitizeCSVCell, checkDangerousContent } from '@/lib/sanitization';
 
 function stripQuotes(s: string): string {
   return s.replace(/^["']|["']$/g, '').trim();
@@ -75,51 +76,60 @@ function parseCSV(text: string): { summary: ParsedCampaign | null; campaigns: Pa
   // Remove BOM
   const clean = text.replace(/^\uFEFF/, '');
   const lines = clean.split('\n').map(l => l.trim()).filter(Boolean);
-  
+
   if (lines.length < 2) return { summary: null, campaigns: [] };
 
   // Header is first line
   // Data rows start from line index 1
   // Line 1 = summary row (has "N/A" in Status and "X Campanhas" in Campanha)
   // Lines 2+ = campaign rows
-  
+
   const campaigns: ParsedCampaign[] = [];
   let summary: ParsedCampaign | null = null;
 
   for (let i = 1; i < lines.length; i++) {
     const cols = lines[i].split(';');
     // CSV columns: Status;Campanha;Última Atualização;Orçamento;Vendas;CPA;Gastos;Faturamento;Lucro;ROAS;Margem;IC;CPI;CPC;CTR;CPM;Impressões;Cliques;Conv. Check.;Conversão do Body;Hook;Frequência;Vendas Recusadas
-    
+
     const campaignName = (cols[1] || '').trim();
     if (!campaignName) continue;
-    
+
+    // STORY-SYS-009: Sanitize campaign name for XSS/SQL injection
+    const sanitizedName = String(sanitizeCSVCell(campaignName, 'string'));
+
+    // Check for dangerous content
+    const dangerCheck = checkDangerousContent(campaignName);
+    if (!dangerCheck.safe) {
+      console.warn(`Linha ${i}: Conteúdo perigoso detectado em "${campaignName}"`, dangerCheck.reason);
+    }
+
     const parsed: ParsedCampaign = {
-      campaign_name: campaignName,
-      status: (cols[0] || '').trim(),
-      budget: (cols[3] || '').trim(),
+      campaign_name: sanitizedName,
+      status: String(sanitizeCSVCell(cols[0] || '', 'string')),
+      budget: String(sanitizeCSVCell(cols[3] || '', 'string')),
       sales: parseBRInt(cols[4] || ''),
       cpa: parseBRNumber(cols[5] || ''),
       spend: parseBRNumber(cols[6] || ''),
       revenue: parseBRNumber(cols[7] || ''),
       profit: parseBRNumber(cols[8] || ''),
       roas: parseBRNumber(cols[9] || ''),
-      margin: parseBRPercent(cols[10] || ''),
+      margin: String(sanitizeCSVCell(cols[10] || '', 'string')),
       ic: parseBRInt(cols[11] || ''),
       cpi: parseBRNumber(cols[12] || ''),
       cpc: parseBRNumber(cols[13] || ''),
-      ctr: parseBRPercent(cols[14] || ''),
+      ctr: String(sanitizeCSVCell(cols[14] || '', 'string')),
       cpm: parseBRNumber(cols[15] || ''),
       impressions: parseBRInt(cols[16] || ''),
       clicks: parseBRInt(cols[17] || ''),
-      conv_checkout: parseBRPercent(cols[18] || ''),
-      conv_body: parseBRPercent(cols[19] || ''),
-      hook: parseBRPercent(cols[20] || ''),
-      frequency: parseBRPercent(cols[21] || ''),
+      conv_checkout: String(sanitizeCSVCell(cols[18] || '', 'string')),
+      conv_body: String(sanitizeCSVCell(cols[19] || '', 'string')),
+      hook: String(sanitizeCSVCell(cols[20] || '', 'string')),
+      frequency: String(sanitizeCSVCell(cols[21] || '', 'string')),
       rejected_sales: parseBRInt(cols[22] || ''),
     };
 
     // Check if it's the summary row (contains "Campanhas" in name)
-    if (campaignName.includes('Campanhas') || campaignName.includes('campanhas')) {
+    if (sanitizedName.includes('Campanhas') || sanitizedName.includes('campanhas')) {
       summary = parsed;
     } else {
       campaigns.push(parsed);
@@ -150,6 +160,18 @@ export function CsvUploadDialog({ open, onOpenChange }: CsvUploadDialogProps) {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
+
+    // Validate file size and format
+    const validation = validateCSVFile(f);
+    if (!validation.valid) {
+      toast({
+        title: 'Arquivo inválido',
+        description: validation.error,
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setFile(f);
     const text = await f.text();
     const result = parseCSV(text);
