@@ -91,6 +91,7 @@ function sanitizeStringField(value: string): string {
   sanitized = sanitized.replace(/;/g, '');
 
   // Remove control characters (newlines, tabs, null bytes)
+  // eslint-disable-next-line no-control-regex
   sanitized = sanitized.replace(/[\x00-\x1F\x7F]/g, '');
 
   return sanitized.trim();
