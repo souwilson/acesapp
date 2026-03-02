@@ -24,15 +24,19 @@ export function ProtectedRoute({ children, requireAdmin, requireEditor }: Protec
       }
 
       // Double-check whitelist on every protected route access (defense in depth)
-      const isAllowed = await checkIsAllowed(user.email);
-      
-      if (!isAllowed) {
-        // User was removed from whitelist or deactivated - force sign out
-        await signOut();
-        setAllowed(false);
-      } else {
-        setAllowed(true);
-      }
+      // TODO: Enable whitelist for production
+      // const isAllowed = await checkIsAllowed(user.email);
+
+      // if (!isAllowed) {
+      //   // User was removed from whitelist or deactivated - force sign out
+      //   await signOut();
+      //   setAllowed(false);
+      // } else {
+      //   setAllowed(true);
+      // }
+
+      // For testing: allow all authenticated users
+      setAllowed(true);
       
       setVerifying(false);
     };

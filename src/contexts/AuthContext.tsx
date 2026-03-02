@@ -152,13 +152,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     // Check if user is in whitelist BEFORE attempting auth
-    const isAllowed = await checkIsAllowed(normalizedEmail);
-    if (!isAllowed) {
-      await logLoginAttempt(normalizedEmail, false, 'not_whitelisted');
-      return { 
-        error: new Error('Acesso restrito. Solicite liberação ao administrador.') 
-      };
-    }
+    // TODO: Enable whitelist for production
+    // const isAllowed = await checkIsAllowed(normalizedEmail);
+    // if (!isAllowed) {
+    //   await logLoginAttempt(normalizedEmail, false, 'not_whitelisted');
+    //   return {
+    //     error: new Error('Acesso restrito. Solicite liberação ao administrador.')
+    //   };
+    // }
 
     // Attempt authentication
     const { error: authError } = await supabase.auth.signInWithPassword({ 
@@ -173,14 +174,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     // Double-check whitelist after successful auth (defense in depth)
-    const stillAllowed = await checkIsAllowed(normalizedEmail);
-    if (!stillAllowed) {
-      await supabase.auth.signOut();
-      await logLoginAttempt(normalizedEmail, false, 'not_whitelisted_post_auth');
-      return { 
-        error: new Error('Acesso restrito. Solicite liberação ao administrador.') 
-      };
-    }
+    // TODO: Enable whitelist for production
+    // const stillAllowed = await checkIsAllowed(normalizedEmail);
+    // if (!stillAllowed) {
+    //   await supabase.auth.signOut();
+    //   await logLoginAttempt(normalizedEmail, false, 'not_whitelisted_post_auth');
+    //   return {
+    //     error: new Error('Acesso restrito. Solicite liberação ao administrador.')
+    //   };
+    // }
 
     // Check if MFA is required
     const mfaRequired = await checkMFAStatus();
