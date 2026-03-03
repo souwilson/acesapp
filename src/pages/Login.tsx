@@ -43,7 +43,7 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
-    
+
     // Validate input
     const validation = loginSchema.safeParse({ email, password });
     if (!validation.success) {
@@ -59,7 +59,7 @@ export default function Login() {
     setIsLoading(true);
 
     const { error, requiresMFA: needsMFA } = await signIn(email, password);
-    
+
     if (error) {
       toast({
         title: 'Acesso negado',
@@ -73,7 +73,7 @@ export default function Login() {
       toast({ title: 'Login realizado com sucesso!' });
       navigate('/');
     }
-    
+
     setIsLoading(false);
   };
 
