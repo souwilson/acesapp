@@ -22,6 +22,7 @@ import Assets from "./pages/Assets";
 import CashFlow from "./pages/CashFlow";
 import CampaignControl from "./pages/CampaignControl";
 import Creatives from "./pages/Creatives";
+import MissionControl from "./pages/MissionControl";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -53,6 +54,7 @@ const App = () => (
             <Route path="/cash-flow" element={<ProtectedRoute><CashFlow /></ProtectedRoute>} />
             <Route path="/campaign-control" element={<ProtectedRoute><CampaignControl /></ProtectedRoute>} />
             <Route path="/creatives" element={<ProtectedRoute><Creatives /></ProtectedRoute>} />
+            <Route path="/mission-control" element={<ProtectedRoute><MissionControl /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

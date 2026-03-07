@@ -23,6 +23,7 @@ import {
   TrendingUp,
   Target,
   Palette,
+  Gauge,
 } from 'lucide-react';
 import logoImage from '@/assets/logo.png';
 import { cn } from '@/lib/utils';
@@ -31,6 +32,7 @@ import { Badge } from '@/components/ui/badge';
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/mission-control', icon: Gauge, label: 'Mission Control' },
   { to: '/assets', icon: Package, label: 'Asset Registry' },
   { to: '/cash-flow', icon: TrendingUp, label: 'Cash Flow' },
   { to: '/campaign-control', icon: Target, label: 'Campanhas' },
