@@ -12,89 +12,81 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.1"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       ad_campaigns: {
         Row: {
-          ad_performance_id: string
-          budget: string | null
+          ad_performance_id: string | null
           campaign_name: string
-          clicks: number | null
-          conv_body: string | null
-          conv_checkout: string | null
-          cpa: number | null
-          cpc: number | null
-          cpi: number | null
-          cpm: number | null
+          clicks: number
+          conversions: number
+          country: string | null
           created_at: string
-          ctr: string | null
-          frequency: string | null
-          hook: string | null
-          ic: number | null
           id: string
-          impressions: number | null
-          margin: string | null
-          profit: number | null
-          rejected_sales: number | null
-          revenue: number | null
-          roas: number | null
-          sales: number | null
-          spend: number | null
-          status: string | null
+          impressions: number
+          platform_id: string
+          product: string | null
+          revenue: number
+          spend: number
+          updated_at: string
+          user_id: string
         }
         Insert: {
-          ad_performance_id: string
-          budget?: string | null
+          ad_performance_id?: string | null
           campaign_name: string
-          clicks?: number | null
-          conv_body?: string | null
-          conv_checkout?: string | null
-          cpa?: number | null
-          cpc?: number | null
-          cpi?: number | null
-          cpm?: number | null
+          clicks?: number
+          conversions?: number
+          country?: string | null
           created_at?: string
-          ctr?: string | null
-          frequency?: string | null
-          hook?: string | null
-          ic?: number | null
           id?: string
-          impressions?: number | null
-          margin?: string | null
-          profit?: number | null
-          rejected_sales?: number | null
-          revenue?: number | null
-          roas?: number | null
-          sales?: number | null
-          spend?: number | null
-          status?: string | null
+          impressions?: number
+          platform_id: string
+          product?: string | null
+          revenue?: number
+          spend?: number
+          updated_at?: string
+          user_id: string
         }
         Update: {
-          ad_performance_id?: string
-          budget?: string | null
+          ad_performance_id?: string | null
           campaign_name?: string
-          clicks?: number | null
-          conv_body?: string | null
-          conv_checkout?: string | null
-          cpa?: number | null
-          cpc?: number | null
-          cpi?: number | null
-          cpm?: number | null
+          clicks?: number
+          conversions?: number
+          country?: string | null
           created_at?: string
-          ctr?: string | null
-          frequency?: string | null
-          hook?: string | null
-          ic?: number | null
           id?: string
-          impressions?: number | null
-          margin?: string | null
-          profit?: number | null
-          rejected_sales?: number | null
-          revenue?: number | null
-          roas?: number | null
-          sales?: number | null
-          spend?: number | null
-          status?: string | null
+          impressions?: number
+          platform_id?: string
+          product?: string | null
+          revenue?: number
+          spend?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -104,67 +96,21 @@ export type Database = {
             referencedRelation: "ad_performance"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "ad_campaigns_platform_id_fkey"
+            columns: ["platform_id"]
+            isOneToOne: false
+            referencedRelation: "platforms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ad_campaigns_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
-      }
-      ad_creatives: {
-        Row: {
-          conversion_body: number | null
-          cpc: number | null
-          cpm: number | null
-          created_at: string
-          cta: number | null
-          ctr: number | null
-          drive_url: string | null
-          id: string
-          identification: string
-          information: string | null
-          observations: string | null
-          play_rate_hook: number | null
-          retention_body: number | null
-          retention_hook: number | null
-          status: string
-          updated_at: string
-          variation: string
-        }
-        Insert: {
-          conversion_body?: number | null
-          cpc?: number | null
-          cpm?: number | null
-          created_at?: string
-          cta?: number | null
-          ctr?: number | null
-          drive_url?: string | null
-          id?: string
-          identification: string
-          information?: string | null
-          observations?: string | null
-          play_rate_hook?: number | null
-          retention_body?: number | null
-          retention_hook?: number | null
-          status?: string
-          updated_at?: string
-          variation?: string
-        }
-        Update: {
-          conversion_body?: number | null
-          cpc?: number | null
-          cpm?: number | null
-          created_at?: string
-          cta?: number | null
-          ctr?: number | null
-          drive_url?: string | null
-          id?: string
-          identification?: string
-          information?: string | null
-          observations?: string | null
-          play_rate_hook?: number | null
-          retention_body?: number | null
-          retention_hook?: number | null
-          status?: string
-          updated_at?: string
-          variation?: string
-        }
-        Relationships: []
       }
       ad_performance: {
         Row: {
@@ -173,13 +119,15 @@ export type Database = {
           date: string
           id: string
           investment: number
-          manager: string | null
           notes: string | null
           platform: string
+          product: string | null
+          profit: number | null
           revenue: number
           roas: number | null
           sales: number
           updated_at: string
+          user_id: string
         }
         Insert: {
           cpa?: number | null
@@ -187,13 +135,15 @@ export type Database = {
           date: string
           id?: string
           investment?: number
-          manager?: string | null
           notes?: string | null
           platform: string
+          product?: string | null
+          profit?: number | null
           revenue?: number
           roas?: number | null
           sales?: number
           updated_at?: string
+          user_id: string
         }
         Update: {
           cpa?: number | null
@@ -201,40 +151,65 @@ export type Database = {
           date?: string
           id?: string
           investment?: number
-          manager?: string | null
           notes?: string | null
           platform?: string
+          product?: string | null
+          profit?: number | null
           revenue?: number
           roas?: number | null
           sales?: number
           updated_at?: string
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "ad_performance_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      allowed_users: {
+      assets: {
         Row: {
-          active: boolean
-          created_at: string
-          created_by: string | null
-          email: string
+          asset_type: string
+          country: string | null
+          created_at: string | null
           id: string
-          role: Database["public"]["Enums"]["app_role"]
+          last_checked: string | null
+          link_or_id: string | null
+          name: string
+          notes: string | null
+          product: string
+          status: string
+          updated_at: string | null
         }
         Insert: {
-          active?: boolean
-          created_at?: string
-          created_by?: string | null
-          email: string
+          asset_type: string
+          country?: string | null
+          created_at?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          last_checked?: string | null
+          link_or_id?: string | null
+          name: string
+          notes?: string | null
+          product: string
+          status?: string
+          updated_at?: string | null
         }
         Update: {
-          active?: boolean
-          created_at?: string
-          created_by?: string | null
-          email?: string
+          asset_type?: string
+          country?: string | null
+          created_at?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          last_checked?: string | null
+          link_or_id?: string | null
+          name?: string
+          notes?: string | null
+          product?: string
+          status?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -242,133 +217,42 @@ export type Database = {
         Row: {
           action: string
           created_at: string
-          entity_id: string
-          entity_name: string | null
-          entity_type: string
           id: string
           new_values: Json | null
           old_values: Json | null
+          record_id: string
+          table_name: string
           user_id: string | null
-          user_name: string
         }
         Insert: {
           action: string
           created_at?: string
-          entity_id: string
-          entity_name?: string | null
-          entity_type: string
           id?: string
           new_values?: Json | null
           old_values?: Json | null
+          record_id: string
+          table_name: string
           user_id?: string | null
-          user_name: string
         }
         Update: {
           action?: string
           created_at?: string
-          entity_id?: string
-          entity_name?: string | null
-          entity_type?: string
           id?: string
           new_values?: Json | null
           old_values?: Json | null
+          record_id?: string
+          table_name?: string
           user_id?: string | null
-          user_name?: string
         }
-        Relationships: []
-      }
-      collaborators: {
-        Row: {
-          created_at: string
-          id: string
-          monthly_value: number
-          name: string
-          notes: string | null
-          payment_date: string
-          role: string
-          status: string
-          type: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          monthly_value?: number
-          name: string
-          notes?: string | null
-          payment_date: string
-          role: string
-          status?: string
-          type: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          monthly_value?: number
-          name?: string
-          notes?: string | null
-          payment_date?: string
-          role?: string
-          status?: string
-          type?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      dismissed_alerts: {
-        Row: {
-          alert_key: string
-          created_at: string
-          dismissed_at: string
-          dismissed_by: string | null
-          id: string
-        }
-        Insert: {
-          alert_key: string
-          created_at?: string
-          dismissed_at?: string
-          dismissed_by?: string | null
-          id?: string
-        }
-        Update: {
-          alert_key?: string
-          created_at?: string
-          dismissed_at?: string
-          dismissed_by?: string | null
-          id?: string
-        }
-        Relationships: []
-      }
-      login_audit: {
-        Row: {
-          created_at: string
-          email: string
-          id: string
-          ip_address: string | null
-          reason: string | null
-          success: boolean
-          user_agent: string | null
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          ip_address?: string | null
-          reason?: string | null
-          success?: boolean
-          user_agent?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          ip_address?: string | null
-          reason?: string | null
-          success?: boolean
-          user_agent?: string | null
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       platforms: {
         Row: {
@@ -380,6 +264,7 @@ export type Database = {
           notes: string | null
           type: string
           updated_at: string
+          user_id: string
         }
         Insert: {
           balance?: number
@@ -390,6 +275,7 @@ export type Database = {
           notes?: string | null
           type: string
           updated_at?: string
+          user_id: string
         }
         Update: {
           balance?: number
@@ -400,8 +286,17 @@ export type Database = {
           notes?: string | null
           type?: string
           updated_at?: string
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "platforms_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -409,6 +304,7 @@ export type Database = {
           email: string
           id: string
           name: string
+          role: string
           updated_at: string
           user_id: string
         }
@@ -417,6 +313,7 @@ export type Database = {
           email: string
           id?: string
           name: string
+          role?: string
           updated_at?: string
           user_id: string
         }
@@ -425,44 +322,9 @@ export type Database = {
           email?: string
           id?: string
           name?: string
+          role?: string
           updated_at?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      recurring_expenses: {
-        Row: {
-          category: string
-          created_at: string
-          current_amount: number
-          id: string
-          name: string
-          notes: string | null
-          payment_method: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          category?: string
-          created_at?: string
-          current_amount?: number
-          id?: string
-          name: string
-          notes?: string | null
-          payment_method?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          current_amount?: number
-          id?: string
-          name?: string
-          notes?: string | null
-          payment_method?: string | null
-          status?: string
-          updated_at?: string
         }
         Relationships: []
       }
@@ -470,189 +332,97 @@ export type Database = {
         Row: {
           amount: number
           created_at: string
-          description: string
-          due_date: string
           id: string
           notes: string | null
-          paid: boolean
-          paid_at: string | null
-          receipt_url: string | null
-          tax_date: string
+          tax_type: string
           updated_at: string
+          user_id: string
         }
         Insert: {
           amount?: number
           created_at?: string
-          description: string
-          due_date: string
           id?: string
           notes?: string | null
-          paid?: boolean
-          paid_at?: string | null
-          receipt_url?: string | null
-          tax_date: string
+          tax_type: string
           updated_at?: string
+          user_id: string
         }
         Update: {
           amount?: number
           created_at?: string
-          description?: string
-          due_date?: string
           id?: string
           notes?: string | null
-          paid?: boolean
-          paid_at?: string | null
-          receipt_url?: string | null
-          tax_date?: string
+          tax_type?: string
           updated_at?: string
+          user_id?: string
         }
-        Relationships: []
-      }
-      tools: {
-        Row: {
-          category: string
-          created_at: string
-          currency: string
-          due_date: string
-          id: string
-          monthly_value: number
-          name: string
-          notes: string | null
-          payment_method: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          category: string
-          created_at?: string
-          currency?: string
-          due_date: string
-          id?: string
-          monthly_value?: number
-          name: string
-          notes?: string | null
-          payment_method?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          currency?: string
-          due_date?: string
-          id?: string
-          monthly_value?: number
-          name?: string
-          notes?: string | null
-          payment_method?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      variable_expenses: {
-        Row: {
-          amount: number
-          category: string
-          created_at: string
-          date: string
-          description: string
-          id: string
-          is_reimbursement: boolean
-          notes: string | null
-          payment_method: string | null
-          receipt_url: string | null
-          reimbursement_status: string | null
-          updated_at: string
-        }
-        Insert: {
-          amount?: number
-          category?: string
-          created_at?: string
-          date: string
-          description: string
-          id?: string
-          is_reimbursement?: boolean
-          notes?: string | null
-          payment_method?: string | null
-          receipt_url?: string | null
-          reimbursement_status?: string | null
-          updated_at?: string
-        }
-        Update: {
-          amount?: number
-          category?: string
-          created_at?: string
-          date?: string
-          description?: string
-          id?: string
-          is_reimbursement?: boolean
-          notes?: string | null
-          payment_method?: string | null
-          receipt_url?: string | null
-          reimbursement_status?: string | null
-          updated_at?: string
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "taxes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       withdrawals: {
         Row: {
           amount: number
           created_at: string
-          date: string
-          destination: string
           id: string
           notes: string | null
-          reason: string
+          platform_id: string
+          status: string
           updated_at: string
+          user_id: string
         }
         Insert: {
-          amount?: number
+          amount: number
           created_at?: string
-          date: string
-          destination?: string
           id?: string
           notes?: string | null
-          reason: string
+          platform_id: string
+          status?: string
           updated_at?: string
+          user_id: string
         }
         Update: {
           amount?: number
           created_at?: string
-          date?: string
-          destination?: string
           id?: string
           notes?: string | null
-          reason?: string
+          platform_id?: string
+          status?: string
           updated_at?: string
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "withdrawals_platform_id_fkey"
+            columns: ["platform_id"]
+            isOneToOne: false
+            referencedRelation: "platforms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "withdrawals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      get_user_role: {
-        Args: { _email: string }
-        Returns: Database["public"]["Enums"]["app_role"]
-      }
-      is_admin: { Args: { _email: string }; Returns: boolean }
-      is_allowed_user: { Args: { _email: string }; Returns: boolean }
-      is_rate_limited: { Args: { _email: string }; Returns: boolean }
-      log_login_attempt: {
-        Args: {
-          _email: string
-          _ip_address?: string
-          _reason?: string
-          _success: boolean
-          _user_agent?: string
-        }
-        Returns: string
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "manager" | "viewer"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -778,9 +548,10 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
-    Enums: {
-      app_role: ["admin", "manager", "viewer"],
-    },
+    Enums: {},
   },
 } as const

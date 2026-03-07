@@ -19,6 +19,9 @@ import {
   X,
   Receipt,
   Landmark,
+  Package,
+  TrendingUp,
+  Target,
 } from 'lucide-react';
 import logoImage from '@/assets/logo.png';
 import { cn } from '@/lib/utils';
@@ -27,6 +30,9 @@ import { Badge } from '@/components/ui/badge';
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/assets', icon: Package, label: 'Asset Registry' },
+  { to: '/cash-flow', icon: TrendingUp, label: 'Cash Flow' },
+  { to: '/campaign-control', icon: Target, label: 'Campanhas' },
   { to: '/platforms', icon: Wallet, label: 'Plataformas' },
   { to: '/tools', icon: Wrench, label: 'Despesas Fixas' },
   { to: '/variable-expenses', icon: Receipt, label: 'Despesas Variáveis' },

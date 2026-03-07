@@ -18,6 +18,9 @@ import AllowedUsers from "./pages/AllowedUsers";
 import AccessLogs from "./pages/AccessLogs";
 import Profile from "./pages/Profile";
 import Taxes from "./pages/Taxes";
+import Assets from "./pages/Assets";
+import CashFlow from "./pages/CashFlow";
+import CampaignControl from "./pages/CampaignControl";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +47,10 @@ const App = () => (
             {/* Admin routes */}
             <Route path="/allowed-users" element={<ProtectedRoute requireAdmin><AllowedUsers /></ProtectedRoute>} />
             <Route path="/access-logs" element={<ProtectedRoute requireAdmin><AccessLogs /></ProtectedRoute>} />
+            {/* MOS Routes */}
+            <Route path="/assets" element={<ProtectedRoute><Assets /></ProtectedRoute>} />
+            <Route path="/cash-flow" element={<ProtectedRoute><CashFlow /></ProtectedRoute>} />
+            <Route path="/campaign-control" element={<ProtectedRoute><CampaignControl /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
