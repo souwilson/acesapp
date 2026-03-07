@@ -22,6 +22,7 @@ import {
   Package,
   TrendingUp,
   Target,
+  Palette,
 } from 'lucide-react';
 import logoImage from '@/assets/logo.png';
 import { cn } from '@/lib/utils';
@@ -33,6 +34,7 @@ const navItems = [
   { to: '/assets', icon: Package, label: 'Asset Registry' },
   { to: '/cash-flow', icon: TrendingUp, label: 'Cash Flow' },
   { to: '/campaign-control', icon: Target, label: 'Campanhas' },
+  { to: '/creatives', icon: Palette, label: 'Criativos' },
   { to: '/platforms', icon: Wallet, label: 'Plataformas' },
   { to: '/tools', icon: Wrench, label: 'Despesas Fixas' },
   { to: '/variable-expenses', icon: Receipt, label: 'Despesas Variáveis' },

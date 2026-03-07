@@ -254,6 +254,48 @@ export type Database = {
           },
         ]
       }
+      creatives: {
+        Row: {
+          created_at: string | null
+          creative_type: string
+          hook: string | null
+          id: string
+          link: string | null
+          name: string
+          notes: string | null
+          platform: string | null
+          product: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          creative_type: string
+          hook?: string | null
+          id?: string
+          link?: string | null
+          name: string
+          notes?: string | null
+          platform?: string | null
+          product: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          creative_type?: string
+          hook?: string | null
+          id?: string
+          link?: string | null
+          name?: string
+          notes?: string | null
+          platform?: string | null
+          product?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       platforms: {
         Row: {
           balance: number
