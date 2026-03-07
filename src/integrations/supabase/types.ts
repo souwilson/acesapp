@@ -42,49 +42,82 @@ export type Database = {
       ad_campaigns: {
         Row: {
           ad_performance_id: string | null
+          budget: string | null
           campaign_name: string
           clicks: number
+          conv_body: string | null
           conversions: number
           country: string | null
+          cpa: number | null
+          cpc: number | null
+          cpm: number | null
           created_at: string
+          ctr: string | null
+          hook: string | null
           id: string
           impressions: number
           platform_id: string
           product: string | null
+          profit: number | null
           revenue: number
+          roas: number | null
+          sales: number | null
           spend: number
+          status: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           ad_performance_id?: string | null
+          budget?: string | null
           campaign_name: string
           clicks?: number
+          conv_body?: string | null
           conversions?: number
           country?: string | null
+          cpa?: number | null
+          cpc?: number | null
+          cpm?: number | null
           created_at?: string
+          ctr?: string | null
+          hook?: string | null
           id?: string
           impressions?: number
           platform_id: string
           product?: string | null
+          profit?: number | null
           revenue?: number
+          roas?: number | null
+          sales?: number | null
           spend?: number
+          status?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           ad_performance_id?: string | null
+          budget?: string | null
           campaign_name?: string
           clicks?: number
+          conv_body?: string | null
           conversions?: number
           country?: string | null
+          cpa?: number | null
+          cpc?: number | null
+          cpm?: number | null
           created_at?: string
+          ctr?: string | null
+          hook?: string | null
           id?: string
           impressions?: number
           platform_id?: string
           product?: string | null
+          profit?: number | null
           revenue?: number
+          roas?: number | null
+          sales?: number | null
           spend?: number
+          status?: string | null
           updated_at?: string
           user_id?: string
         }
