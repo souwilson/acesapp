@@ -8,6 +8,7 @@ import { useCashFlow } from '@/hooks/useCashFlow';
 import { useCampaignControl } from '@/hooks/useCampaignControl';
 import { useCreatives } from '@/hooks/useCreatives';
 import { ProductPLChart } from '@/components/dashboard/ProductPLChart';
+import { platformLabel } from '@/lib/utils';
 
 type Period = '7d' | '30d';
 
@@ -312,7 +313,7 @@ export default function MissionControl() {
                 {recentEntries.map((e) => (
                   <div key={e.ad_performance_id} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
                     <div>
-                      <p className="text-sm text-foreground">{e.product || '—'} · {e.platform}</p>
+                      <p className="text-sm text-foreground">{e.product || '—'} · {platformLabel(e.platform)}</p>
                       <p className="text-xs text-muted-foreground">
                         {new Date(e.date + 'T00:00:00').toLocaleDateString('pt-BR')}
                       </p>

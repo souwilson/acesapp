@@ -20,10 +20,18 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   CashFlowEntry,
   useCreateCashFlowEntry,
   useUpdateCashFlowEntry,
 } from '@/hooks/useCashFlow';
+import { PLATFORM_OPTIONS } from '@/lib/utils';
 
 const formSchema = z.object({
   date: z.string().min(1, 'Data é obrigatória'),
@@ -169,9 +177,18 @@ export function CashFlowEntryDialog({ open, onOpenChange, entry }: CashFlowEntry
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-foreground">Plataforma</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="bg-secondary border-border" placeholder="Ex: Facebook, Google..." />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="bg-secondary border-border">
+                        <SelectValue placeholder="Selecione a plataforma" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {PLATFORM_OPTIONS.map((p) => (
+                        <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

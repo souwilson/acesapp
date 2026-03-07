@@ -22,6 +22,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CashFlowEntry, useCashFlow, useDeleteCashFlowEntry } from '@/hooks/useCashFlow';
 import { CashFlowEntryDialog } from '@/components/forms/CashFlowEntryDialog';
+import { PLATFORM_OPTIONS, platformLabel } from '@/lib/utils';
 
 const ALL_VALUE = '__all__';
 
@@ -291,7 +292,7 @@ export default function CashFlow() {
                         {new Date(entry.date + 'T00:00:00').toLocaleDateString('pt-BR')}
                       </td>
                       <td className="py-3 pr-4 text-muted-foreground">{entry.product || '—'}</td>
-                      <td className="py-3 pr-4 text-foreground">{entry.platform}</td>
+                      <td className="py-3 pr-4 text-foreground">{platformLabel(entry.platform)}</td>
                       <td className="py-3 pr-4 text-right text-foreground">{formatCurrency(entry.investment)}</td>
                       <td className="py-3 pr-4 text-right text-foreground">{formatCurrency(entry.revenue)}</td>
                       <td className="py-3 pr-4 text-right">
