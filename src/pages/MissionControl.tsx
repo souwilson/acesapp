@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Gauge, TrendingUp, TrendingDown, Package, Palette, Target } from 'lucide-react';
+import { Gauge, TrendingUp, TrendingDown, Package, Palette, Target, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +7,7 @@ import { useAssets } from '@/hooks/useAssets';
 import { useCashFlow } from '@/hooks/useCashFlow';
 import { useCampaignControl } from '@/hooks/useCampaignControl';
 import { useCreatives } from '@/hooks/useCreatives';
+import { ProductPLChart } from '@/components/dashboard/ProductPLChart';
 
 type Period = '7d' | '30d';
 
@@ -52,6 +53,23 @@ export default function MissionControl() {
       ...totals,
       roas: totals.investment > 0 ? totals.revenue / totals.investment : 0,
     };
+  }, [entries]);
+
+  // P&L by product chart data
+  const productPLData = useMemo(() => {
+    const map = new Map<string, { investment: number; revenue: number; profit: number }>();
+    for (const e of entries) {
+      const key = e.product || '(sem produto)';
+      const cur = map.get(key) ?? { investment: 0, revenue: 0, profit: 0 };
+      map.set(key, {
+        investment: cur.investment + e.investment,
+        revenue: cur.revenue + e.revenue,
+        profit: cur.profit + e.profit,
+      });
+    }
+    return Array.from(map.entries())
+      .map(([product, vals]) => ({ product, ...vals }))
+      .sort((a, b) => b.revenue - a.revenue);
   }, [entries]);
 
   // Asset breakdown
@@ -162,6 +180,19 @@ export default function MissionControl() {
           </CardContent>
         </Card>
       </div>
+
+      {/* P&L by Product Chart */}
+      <Card className="bg-card border-border">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-foreground text-sm flex items-center gap-2">
+            <BarChart3 className="h-4 w-4 text-primary" />
+            P&amp;L por Produto — {period === '7d' ? 'Últimos 7 dias' : 'Últimos 30 dias'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProductPLChart data={productPLData} />
+        </CardContent>
+      </Card>
 
       {/* Status Breakdowns */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
